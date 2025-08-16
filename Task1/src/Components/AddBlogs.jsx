@@ -11,7 +11,7 @@ function AddBlogs() {
     const newBlog = {
       date: Date.now(),
       title: blogtitle,
-      decs: blogdesc,
+      desc: blogdesc,
     };
 
     const allblogs = JSON.parse(localStorage.getItem("blogs")) || [];
