@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 
 function Showblogs() {
   const [blogs, setBlogs] = useState([]);
-  const [editingIndex, setEditingIndex] = useState(null); // track which blog is being edited
+  const [editIndex, setEditIndex] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDesc, setEditDesc] = useState("");
 
+  const [search, setsearch] = useState("");
   useEffect(() => {
     const storedblogs = JSON.parse(localStorage.getItem("blogs")) || [];
     setBlogs(storedblogs);
   }, []);
 
-  // ✅ Delete blog
   const handleDelete = (index) => {
     let storedblogs = JSON.parse(localStorage.getItem("blogs")) || [];
     storedblogs.splice(index, 1);
@@ -19,14 +19,12 @@ function Showblogs() {
     setBlogs(storedblogs);
   };
 
-  // ✅ Start editing
   const handleEdit = (index) => {
-    setEditingIndex(index);
+    setEditIndex(index);
     setEditTitle(blogs[index].title);
-    setEditDesc(blogs[index].desc || blogs[index].decs);
+    setEditDesc(blogs[index].desc);
   };
 
-  // ✅ Save edited blog
   const handleSave = (index) => {
     let storedblogs = JSON.parse(localStorage.getItem("blogs")) || [];
     storedblogs[index].title = editTitle;
@@ -34,25 +32,39 @@ function Showblogs() {
     localStorage.setItem("blogs", JSON.stringify(storedblogs));
     setBlogs(storedblogs);
 
-    setEditingIndex(null); // close edit mode
+    setEditIndex(null);
   };
+
+  const searchedblogs = blogs.filter((blog) =>
+    blog.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="p-6 bg-slate-800 min-h-screen text-white">
-      <h1 className="text-3xl font-bold mb-6">BLOGS</h1>
+      <input
+        className="bg-slate-300 text-black rounded-2xl text-center"
+        type="text"
+        name="search"
+        placeholder="Search blogs"
+        id="search"
+        value={search}
+        onChange={(e) => {
+          setsearch(e.target.value);
+        }}
+      />
 
-      {blogs.length === 0 ? (
+      <div className="pt-4"></div>
+      {searchedblogs.length === 0 ? (
         <p>No blogs available</p>
       ) : (
-        <div className="flex flex-col gap-4">
-          {blogs.map((blog, index) => (
+        <div className="flex flex-col gap-4 w-[300px]">
+          {searchedblogs.map((blog, index) => (
             <div
               key={index}
               className="bg-slate-700 p-4 rounded-xl shadow-lg flex flex-col"
             >
-              {editingIndex === index ? (
+              {editIndex === index ? (
                 <>
-                  {/* Edit Mode */}
                   <input
                     type="text"
                     value={editTitle}
@@ -72,7 +84,7 @@ function Showblogs() {
                       Save
                     </button>
                     <button
-                      onClick={() => setEditingIndex(null)}
+                      onClick={() => setEditIndex(null)}
                       className="px-3 py-1 bg-gray-500 hover:bg-gray-600 rounded text-white text-sm"
                     >
                       Cancel
@@ -81,9 +93,8 @@ function Showblogs() {
                 </>
               ) : (
                 <>
-                  {/* View Mode */}
                   <h2 className="text-xl font-semibold">{blog.title}</h2>
-                  <p className="text-slate-300">{blog.desc || blog.decs}</p>
+                  <p className="text-slate-300">{blog.desc}</p>
                   <span className="text-sm text-slate-400 mb-2">
                     {new Date(blog.date).toLocaleString()}
                   </span>
