@@ -40,7 +40,7 @@ function Showblogs() {
   );
 
   return (
-    <div className="p-6 bg-slate-800 min-h-screen text-white">
+    <div className="p-6 bg-slate-800 text-white">
       <input
         className="bg-slate-300 text-black rounded-2xl text-center"
         type="text"
