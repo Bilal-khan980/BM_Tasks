@@ -79,7 +79,7 @@ function Showblogs() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleSave(index)}
-                      className="px-3 py-1 bg-green-500 hover:bg-green-600 rounded text-white text-sm"
+                      className="px-3 py-1 bg-slate-500 hover:bg-slate-200 rounded text-white text-sm"
                     >
                       Save
                     </button>
